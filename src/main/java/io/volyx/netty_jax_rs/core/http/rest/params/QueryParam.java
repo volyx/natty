@@ -6,11 +6,6 @@ import io.netty.channel.ChannelHandlerContext;
 import java.lang.reflect.Array;
 import java.util.List;
 
-/**
- *
- *
- * Created on 09.12.15.
- */
 public class QueryParam extends Param {
 
     public QueryParam(String name, Class<?> type) {

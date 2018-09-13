@@ -15,14 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Base server abstraction. Class responsible for Netty EventLoops starting amd port listening.
  *
- *
- *
- * Created on 3/10/2015.
  */
 public class BaseServer {
 
@@ -35,21 +33,24 @@ public class BaseServer {
 
     private ChannelFuture cf;
 
-    public BaseServer(String listenAddress, int port, TransportTypeHolder transportTypeHolder, List<BaseHttpHandler> handlerList) {
+    public BaseServer(String listenAddress, int port, TransportTypeHolder transportTypeHolder, List<Object> restApi) {
         this.listenAddress = listenAddress;
         this.port = port;
         this.transportTypeHolder = transportTypeHolder;
+        List<BaseHttpHandler> handlerList = new ArrayList<>();
+        for (Object o : restApi) {
+            handlerList.add(new BaseHttpHandler("", o));
+        }
 
         channelInitializer = new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline()
-                        .addLast("HttpsServerCodec", new HttpServerCodec())
-                        .addLast("HttpsServerKeepAlive", new HttpServerKeepAliveHandler())
-                        .addLast("HttpsObjectAggregator",
-                                new HttpObjectAggregator(Integer.MAX_VALUE, true))
-                        .addLast("HttpChunkedWrite", new ChunkedWriteHandler())
-                        .addLast(handlerList.toArray(new BaseHttpHandler[handlerList.size()]));
+                        .addLast(HttpServerCodec.class.getSimpleName(), new HttpServerCodec())
+                        .addLast(HttpServerKeepAliveHandler.class.getSimpleName(), new HttpServerKeepAliveHandler())
+                        .addLast(HttpObjectAggregator.class.getSimpleName(), new HttpObjectAggregator(Integer.MAX_VALUE, true))
+                        .addLast(ChunkedWriteHandler.class.getSimpleName(), new ChunkedWriteHandler())
+                        .addLast(handlerList.toArray(new BaseHttpHandler[0]));
 
             }
         };

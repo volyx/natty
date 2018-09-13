@@ -1,5 +1,6 @@
 package io.volyx.netty_jax_rs.core.http;
 
+import io.netty.channel.ChannelHandler;
 import io.volyx.netty_jax_rs.core.http.rest.HandlerHolder;
 import io.volyx.netty_jax_rs.core.http.rest.HandlerWrapper;
 import io.volyx.netty_jax_rs.core.http.rest.URIDecoder;
@@ -16,21 +17,17 @@ import java.util.regex.Matcher;
 
 import static io.volyx.netty_jax_rs.core.http.Response.serverError;
 
-/**
- *
- *
- * Created on 24.12.15.
- */
-public abstract class BaseHttpHandler extends ChannelInboundHandlerAdapter {
+@ChannelHandler.Sharable
+public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger log = LogManager.getLogger(BaseHttpHandler.class);
     protected final HandlerWrapper[] handlers;
     private final String rootPath;
 
 
-    public BaseHttpHandler(String rootPath) {
+    public BaseHttpHandler(String rootPath, Object restApi) {
         this.rootPath = rootPath;
-        this.handlers = AnnotationsUtil.register(rootPath, this);
+        this.handlers = AnnotationsUtil.register(rootPath, restApi);
     }
 
     @Override

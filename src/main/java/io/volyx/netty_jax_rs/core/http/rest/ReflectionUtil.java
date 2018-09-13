@@ -4,11 +4,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- *
- * Created on 2/4/2015.
- */
 public final class ReflectionUtil {
 
     private ReflectionUtil() {

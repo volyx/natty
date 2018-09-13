@@ -1,20 +1,14 @@
 package io.volyx.netty_jax_rs.core.http.rest.params;
 
+import com.google.gson.JsonSyntaxException;
 import io.volyx.netty_jax_rs.core.http.JsonParser;
 import io.volyx.netty_jax_rs.core.http.rest.URIDecoder;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.core.MediaType;
 
-/**
- *
- *
- * Created on 09.12.15.
- */
 public class BodyParam extends Param {
 
     private static final Logger log = LogManager.getLogger(BodyParam.class);
@@ -37,8 +31,8 @@ public class BodyParam extends Param {
                 String data = "";
                 try {
                     data = uriDecoder.getContentAsString();
-                    return JsonParser.MAPPER.readValue(data, type);
-                } catch (JsonParseException | JsonMappingException jsonParseError) {
+                    return JsonParser.MAPPER.fromJson(data, type);
+                } catch (JsonSyntaxException jsonParseError) {
                     log.debug("Error parsing body param : '{}'.", data);
                     throw new RuntimeException("Error parsing body param. " + data);
                 } catch (Exception e) {

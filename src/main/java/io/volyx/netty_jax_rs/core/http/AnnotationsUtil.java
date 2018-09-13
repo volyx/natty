@@ -18,11 +18,6 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- *
- * Created on 09.12.15.
- */
 public final class AnnotationsUtil {
 
     private AnnotationsUtil() {
@@ -34,21 +29,21 @@ public final class AnnotationsUtil {
 
     private static HandlerWrapper[] registerHandler(String rootPath, Object handler) {
         Class<?> handlerClass = handler.getClass();
-        Annotation pathAnnotation = handlerClass.getAnnotation(Path.class);
-        String handlerMainPath = ((Path) pathAnnotation).value();
+        Path pathAnnotation = handlerClass.getAnnotation(Path.class);
+        String handlerMainPath = pathAnnotation.value();
 
         List<HandlerWrapper> processors = new ArrayList<>();
 
         for (Method method : handlerClass.getMethods()) {
-            Annotation consumes = method.getAnnotation(Consumes.class);
+            Consumes consumes = method.getAnnotation(Consumes.class);
             String contentType = MediaType.APPLICATION_JSON;
             if (consumes != null) {
-                contentType = ((Consumes) consumes).value()[0];
+                contentType = consumes.value()[0];
             }
 
-            Annotation path = method.getAnnotation(Path.class);
+            Path path = method.getAnnotation(Path.class);
             if (path != null) {
-                String fullPath = rootPath + handlerMainPath + ((Path) path).value();
+                String fullPath = rootPath + handlerMainPath + path.value();
                 UriTemplate uriTemplate = new UriTemplate(fullPath);
 
                 HandlerWrapper handlerHolder = new HandlerWrapper(uriTemplate, method, handler);
@@ -90,7 +85,7 @@ public final class AnnotationsUtil {
             }
         }
 
-        return processors.toArray(new HandlerWrapper[processors.size()]);
+        return processors.toArray(new HandlerWrapper[0]);
     }
 
 }

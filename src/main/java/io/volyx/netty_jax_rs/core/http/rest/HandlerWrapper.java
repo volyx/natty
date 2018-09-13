@@ -19,9 +19,6 @@ import java.lang.reflect.Method;
  * Wrapper around Singleton Services.
  * Holds all info about annotations and service purpose.
  *
- *
- *
- * Created on 09.12.15.
  */
 public class HandlerWrapper {
 

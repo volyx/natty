@@ -11,11 +11,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.List;
 
-/**
- *
- *
- * Created on 09.12.15.
- */
 public class FormParam extends Param {
 
     private static final Logger log = LogManager.getLogger(FormParam.class);

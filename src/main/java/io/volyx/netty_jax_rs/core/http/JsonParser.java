@@ -1,18 +1,12 @@
 package io.volyx.netty_jax_rs.core.http;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
-import java.util.zip.DeflaterOutputStream;
 
 /**
  * Date: 21.11.13
@@ -26,34 +20,16 @@ public final class JsonParser {
     }
 
     //it is threadsafe
-    public static final ObjectMapper MAPPER = init();
+    public static final Gson MAPPER = new GsonBuilder().create();
 
 
-
-    public static ObjectMapper init() {
-        return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
-                .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    }
-
-
-    private static byte[] writeJsonAsCompressedBytes(ObjectWriter objectWriter, Object o) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (OutputStream out = new DeflaterOutputStream(baos)) {
-            objectWriter.writeValue(out, o);
-        } catch (Exception e) {
-            log.error("Error compressing data.", e);
-            return null;
-        }
-        return baos.toByteArray();
+    private static byte[] writeJsonAsCompressedBytes(Gson objectWriter, Object o) {
+        return objectWriter.toJson(o).getBytes(StandardCharsets.UTF_8);
     }
 
     public static String toJson(Object o) {
         try {
-            return MAPPER.writeValueAsString(o);
+            return MAPPER.toJson(o);
         } catch (Exception e) {
             log.error("Error jsoning object.", e);
         }

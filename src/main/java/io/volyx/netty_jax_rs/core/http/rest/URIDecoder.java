@@ -16,11 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- *
- * Created on 06.12.15.
- */
 public class URIDecoder extends QueryStringDecoder implements Closeable {
 
     public final String[] paths;

@@ -15,11 +15,6 @@ import static io.netty.handler.codec.http.HttpHeaderNames.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-/**
- *
- *
- * Created on 01.12.15.
- */
 public final class Response extends DefaultFullHttpResponse {
 
     private static final String JSON = MediaType.APPLICATION_JSON + ";charset=utf-8";

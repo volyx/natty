@@ -15,10 +15,6 @@ import java.io.Closeable;
 /**
  * Used in order to re-use EventLoopGroups, this is done for performance reasons.
  * To create less threads and minimize memory footprint (recommended way by netty devs)
- *
- *
- *
- * Created on 25.04.15.
  */
 public class TransportTypeHolder implements Closeable {
 
