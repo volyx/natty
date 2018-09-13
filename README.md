@@ -1,6 +1,10 @@
-Netty Jax-RS implementation
+## Netty JAX-RS implementation. 
+
+Implementation supports subset of [JAX_RS](https://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services) specification annotations.
 
 [![Build Status](https://travis-ci.com/volyx/netty-jax-rs.svg?branch=master)](https://travis-ci.com/volyx/netty-jax-rs)
+
+[![codecov](https://codecov.io/gh/volyx/netty-jax-rs/branch/master/graph/badge.svg)](https://codecov.io/gh/volyx/netty-jax-rs)
 
 Example
 
