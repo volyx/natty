@@ -39,7 +39,7 @@ public class BaseServer {
         this.transportTypeHolder = transportTypeHolder;
         List<BaseHttpHandler> handlerList = new ArrayList<>();
         for (Object o : restApi) {
-            handlerList.add(new BaseHttpHandler("", o));
+            handlerList.add(new BaseHttpHandler(o));
         }
 
         channelInitializer = new ChannelInitializer<SocketChannel>() {

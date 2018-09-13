@@ -22,12 +22,10 @@ public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger log = LogManager.getLogger(BaseHttpHandler.class);
     protected final HandlerWrapper[] handlers;
-    private final String rootPath;
 
 
-    public BaseHttpHandler(String rootPath, Object restApi) {
-        this.rootPath = rootPath;
-        this.handlers = AnnotationsUtil.register(rootPath, restApi);
+    public BaseHttpHandler(Object restApi) {
+        this.handlers = AnnotationsUtil.register(restApi);
     }
 
     @Override

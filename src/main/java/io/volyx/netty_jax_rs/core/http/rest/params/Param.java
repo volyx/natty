@@ -31,4 +31,12 @@ public abstract class Param {
         }
         return value;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Class<?> getType() {
+        return type;
+    }
 }

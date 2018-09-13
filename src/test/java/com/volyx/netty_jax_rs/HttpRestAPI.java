@@ -12,17 +12,17 @@ import javax.ws.rs.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/")
+@Path("/test")
 public class HttpRestAPI {
 
     @GET
-    @Path("hello/{name}")
+    @Path("/hello/{name}")
     public Response getDashboard(@PathParam("name") String name) {
         return Response.ok("Hello " + name + "!");
     }
 
     @GET
-    @Path("test/{name}")
+    @Path("/test/{name}")
     public Response test(@PathParam("name") String name) {
         return Response.ok(JsonParser.toJson(new Test()),  "application/json");
     }

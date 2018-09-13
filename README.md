@@ -1,5 +1,7 @@
 Netty Jax-RS implementation
 
+[![Build Status](https://travis-ci.com/volyx/netty-jax-rs.svg?branch=master)](https://travis-ci.com/volyx/netty-jax-rs)
+
 Example
 
 ```java

@@ -23,12 +23,8 @@ public final class AnnotationsUtil {
     private AnnotationsUtil() {
     }
 
-    public static HandlerWrapper[] register(String rootPath, Object o) {
-        return registerHandler(rootPath, o);
-    }
-
-    private static HandlerWrapper[] registerHandler(String rootPath, Object handler) {
-        Class<?> handlerClass = handler.getClass();
+    public static HandlerWrapper[] register(Object o) {
+        Class<?> handlerClass = o.getClass();
         Path pathAnnotation = handlerClass.getAnnotation(Path.class);
         String handlerMainPath = pathAnnotation.value();
 
@@ -43,10 +39,10 @@ public final class AnnotationsUtil {
 
             Path path = method.getAnnotation(Path.class);
             if (path != null) {
-                String fullPath = rootPath + handlerMainPath + path.value();
+                String fullPath = handlerMainPath + path.value();
                 UriTemplate uriTemplate = new UriTemplate(fullPath);
 
-                HandlerWrapper handlerHolder = new HandlerWrapper(uriTemplate, method, handler);
+                HandlerWrapper handlerHolder = new HandlerWrapper(uriTemplate, method, o);
 
                 for (int i = 0; i < method.getParameterCount(); i++) {
                     Parameter parameter = method.getParameters()[i];

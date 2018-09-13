@@ -75,4 +75,7 @@ public class UriTemplate {
         return values;
     }
 
+    public String getUrlPattern() {
+        return urlPattern;
+    }
 }
