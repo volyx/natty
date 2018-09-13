@@ -11,6 +11,6 @@ public class OkRestApi {
 	@GET
 	@Path("ok")
 	public Response ok() {
-		return Response.ok(JsonParser.valueToJsonAsString("ok"));
+		return Response.ok(JsonParser.toJson("ok"));
 	}
 }
