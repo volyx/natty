@@ -4,14 +4,14 @@ import com.google.gson.JsonSyntaxException;
 import io.volyx.netty_jax_rs.core.http.JsonParser;
 import io.volyx.netty_jax_rs.core.http.rest.URIDecoder;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 
 public class BodyParam extends Param {
 
-    private static final Logger log = LogManager.getLogger(BodyParam.class);
+    private static final Logger log = LoggerFactory.getLogger(BodyParam.class);
 
     private final String expectedContentType;
 

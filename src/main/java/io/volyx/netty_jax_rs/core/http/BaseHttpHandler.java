@@ -9,8 +9,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.ReferenceCountUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ import static io.volyx.netty_jax_rs.core.http.Response.serverError;
 @ChannelHandler.Sharable
 public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
 
-    private static final Logger log = LogManager.getLogger(BaseHttpHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseHttpHandler.class);
     protected final HandlerWrapper[] handlers;
 
 
@@ -46,7 +46,7 @@ public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
             try {
                 invokeHandler(ctx, req, handlerHolder.handler, handlerHolder.extractedParams);
             } catch (Exception e) {
-                log.debug("Error processing http request.", e);
+                log.error("Error processing http request.", e);
                 ctx.writeAndFlush(serverError(e.getMessage()), ctx.voidPromise());
             } finally {
                 ReferenceCountUtil.release(req);

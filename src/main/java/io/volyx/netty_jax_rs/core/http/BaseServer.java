@@ -11,12 +11,13 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.HttpServerKeepAliveHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Base server abstraction. Class responsible for Netty EventLoops starting amd port listening.
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class BaseServer {
 
-    private static final Logger log = LogManager.getLogger(BaseServer.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseServer.class);
 
     private final String listenAddress;
     private final int port;
@@ -45,12 +46,15 @@ public class BaseServer {
         channelInitializer = new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline()
+                ch.
+                        pipeline()
                         .addLast(HttpServerCodec.class.getSimpleName(), new HttpServerCodec())
                         .addLast(HttpServerKeepAliveHandler.class.getSimpleName(), new HttpServerKeepAliveHandler())
                         .addLast(HttpObjectAggregator.class.getSimpleName(), new HttpObjectAggregator(Integer.MAX_VALUE, true))
                         .addLast(ChunkedWriteHandler.class.getSimpleName(), new ChunkedWriteHandler())
-                        .addLast(handlerList.toArray(new BaseHttpHandler[0]));
+                        .addLast(handlerList.toArray(new BaseHttpHandler[0]))
+//                        .addLast(new HttpUploadServerHandler())
+                ;
 
             }
         };
@@ -71,11 +75,11 @@ public class BaseServer {
     }
 
     protected String getServerName() {
-        return "HTTPS API, WebSockets and Admin page";
+        return "Http Server";
     }
 
     public ChannelFuture close() {
-        System.out.println("Shutting down HTTPS API, WebSockets and Admin server...");
+        System.out.println("Shutting Http Server ...");
         return cf.channel().close();
     }
 
@@ -87,6 +91,7 @@ public class BaseServer {
             b.group(bossGroup, workerGroup)
                     .channel(channelClass)
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
+//                    .childOption(ChannelOption.SO_TIMEOUT, (int) TimeUnit.MINUTES.toMillis(2))
                     .childHandler(getChannelInitializer());
 
             InetSocketAddress listenTo = (listenAddress == null || listenAddress.isEmpty())

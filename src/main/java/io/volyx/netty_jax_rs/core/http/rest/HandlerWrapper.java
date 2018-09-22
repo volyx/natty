@@ -6,8 +6,8 @@ import io.volyx.netty_jax_rs.core.http.rest.params.Param;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpMethod;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  */
 public class HandlerWrapper {
 
-    private static final Logger log = LogManager.getLogger(HandlerWrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(HandlerWrapper.class);
 
     public final UriTemplate uriTemplate;
 
@@ -81,10 +81,10 @@ public class HandlerWrapper {
             Throwable cause = e.getCause();
             if (cause == null) {
                 log.error("Error invoking handler. Reason : {}.", e.getMessage());
-                log.debug(e);
+                log.debug(e.getMessage(), e);
             } else {
                 log.error("Error invoking handler. Reason : {}.", cause.getMessage());
-                log.debug(cause);
+                log.debug(cause.getMessage(), e);
             }
 
             return Response.serverError(e.getMessage());

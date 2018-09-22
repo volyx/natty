@@ -2,8 +2,8 @@ package io.volyx.netty_jax_rs.core.http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.StringJoiner;
@@ -14,7 +14,7 @@ import java.util.StringJoiner;
  */
 public final class JsonParser {
 
-    private static final Logger log = LogManager.getLogger(JsonParser.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonParser.class);
 
     private JsonParser() {
     }

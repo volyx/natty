@@ -1,9 +1,11 @@
 package com.volyx.netty_jax_rs;
 
+import io.netty.handler.codec.http.multipart.FileUpload;
 import io.volyx.netty_jax_rs.core.http.JsonParser;
 import io.volyx.netty_jax_rs.core.http.Response;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
 @Path("/")
@@ -22,8 +24,8 @@ public class OkRestApi {
 
 	@POST
 	@Path("form")
-	public Response form(@FormParam("form") String query) {
-		return Response.ok(JsonParser.toJson(query));
+	public Response form(@FormParam("form") String from, @FormParam("form2") String from2) {
+		return Response.ok(JsonParser.toJson(from + from2));
 	}
 
 	@POST
@@ -31,6 +33,26 @@ public class OkRestApi {
 	public Response body(Map<String, String> body) {
 		return Response.ok(JsonParser.toJson(body));
 	}
+
+	@POST
+	@Path("model")
+	public Response body(Model body) {
+		return Response.ok(JsonParser.toJson(body));
+	}
+
+	@POST
+	@Path("model")
+	public Response bodyModel(Model body) {
+		return Response.ok(JsonParser.toJson(body));
+	}
+
+	@POST
+	@Path("file")
+	public Response uploadFile(@FormParam("file") FileUpload file) {
+
+		return Response.ok(JsonParser.toJson(file.getFilename()));
+	}
+
 
 
 }

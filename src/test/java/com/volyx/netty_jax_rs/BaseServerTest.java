@@ -2,25 +2,29 @@ package com.volyx.netty_jax_rs;
 
 import io.volyx.netty_jax_rs.core.http.BaseServer;
 import io.volyx.netty_jax_rs.core.http.TransportTypeHolder;
-import okhttp3.OkHttpClient;
+import okhttp3.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class BaseServerTest {
-
-	private static final String LISTEN_ADDRESS = "127.0.0.1";
+	private static final Logger logger = LoggerFactory.getLogger(BaseServerTest.class);
+	static final String LISTEN_ADDRESS = "127.0.0.1";
 	private static final int PORT = 9191;
 	private BaseServer server;
 	private Thread serverThread;
@@ -50,11 +54,15 @@ public class BaseServerTest {
 			}
 		}
 
+		final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+				.readTimeout(60, TimeUnit.SECONDS)
+				.connectTimeout(60, TimeUnit.SECONDS)
+				.build();
+
+
 		retrofit = new Retrofit.Builder()
 				.addConverterFactory(GsonConverterFactory.create())
-				.client(
-						new OkHttpClient.Builder().build()
-				)
+				.client(okHttpClient)
 				.baseUrl("http://" + LISTEN_ADDRESS + ":" + PORT)
 				.build();
 	}
@@ -90,9 +98,9 @@ public class BaseServerTest {
 		final OkService okService = retrofit.create(OkService.class);
 
 		try {
-			final String body = okService.form("test").execute().body();
+			final String body = okService.form("test", "test2").execute().body();
 			Assert.assertNotNull(body);
-			Assert.assertEquals("test", body);
+			Assert.assertEquals("test" + "test2", body);
 		} catch (IOException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -103,12 +111,45 @@ public class BaseServerTest {
 		final OkService okService = retrofit.create(OkService.class);
 
 		try {
-			Map<String, String> map = new HashMap<>();
-			map.put("1", "2");
+			Map<String, String> map = Map.of("1", "2");
 			final Map<String, String> body = okService.body(map).execute().body();
 			Assert.assertNotNull(body);
 			Assert.assertEquals(map, body);
 		} catch (IOException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(timeout = 10_000L)
+	public void testModel() {
+		final OkService okService = retrofit.create(OkService.class);
+
+		try {
+			Model model = new Model();
+			model.test = "123";
+			final Model body = okService.model(model).execute().body();
+			Assert.assertNotNull(body);
+			Assert.assertEquals(model, body);
+		} catch (IOException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+//			(timeout = 10_000L)
+	public void testFileUpload() {
+		final OkService okService = retrofit.create(OkService.class);
+		File file = new File("/Users/volyx/Projects/netty-jax-rs/src/test/resources/test.jpg");
+		RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+		MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+		try {
+			final String responseBody = okService.updateProfile(body).execute().body();
+			Assert.assertNotNull(responseBody);
+			Assert.assertEquals(file.getName(), responseBody);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -123,10 +164,18 @@ public class BaseServerTest {
 
 		@FormUrlEncoded
 		@POST("/form")
-		Call<String> form(@Field("form") String form);
+		Call<String> form(@Field("form") String form, @Field("form2") String from2);
 
 		@POST("/body")
 		Call<Map<String, String>> body(@Body Map<String, String> body);
+
+		@POST("/model")
+		Call<Model> model(@Body Model body);
+
+		@Multipart
+		@POST("file")
+		Call<String> updateProfile(@Part MultipartBody.Part image);
+
 	}
 
 	@After

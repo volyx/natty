@@ -7,8 +7,8 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 
@@ -18,7 +18,7 @@ import java.io.Closeable;
  */
 public class TransportTypeHolder implements Closeable {
 
-    private static final Logger log = LogManager.getLogger(TransportTypeHolder.class);
+    private static final Logger log = LoggerFactory.getLogger(TransportTypeHolder.class);
 
     public final EventLoopGroup bossGroup;
     public final EventLoopGroup workerGroup;
