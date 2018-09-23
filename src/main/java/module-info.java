@@ -6,4 +6,6 @@ module netty.jax.rs {
 	requires javax.ws.rs.api;
 	requires gson;
 	requires io.netty.all;
+
+	exports io.volyx.netty.jax.rs.http;
 }
