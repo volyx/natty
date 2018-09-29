@@ -9,21 +9,6 @@ public final class ReflectionUtil {
     private ReflectionUtil() {
     }
 
-    /**
-     * Used to generate map of class fields where key is field value and value is field name.
-     */
-//    public static Map<Integer, String> generateMapOfValueNameInteger(Class<?> clazz) {
-//        Map<Integer, String> valuesName = new HashMap<>();
-//        try {
-//            for (Field field : clazz.getFields()) {
-//                valuesName.put((Integer) field.get(int.class), field.getName());
-//            }
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//        return valuesName;
-//    }
-
     public static Object castTo(Class type, String value) {
         if (type == byte.class || type == Byte.class) {
             return Byte.valueOf(value);
