@@ -1,6 +1,5 @@
 package io.volyx.netty.jax.rs.http;
 
-import io.netty.util.AsciiString;
 import okhttp3.*;
 import org.junit.*;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import retrofit2.http.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +19,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class BaseServerTest {
-	private static final Logger logger = LoggerFactory.getLogger(BaseServerTest.class);
+public class ServerTest {
+	private static final Logger logger = LoggerFactory.getLogger(ServerTest.class);
 	static final String LISTEN_ADDRESS = "127.0.0.1";
 	private static final int PORT = 9191;
-	private BaseServer server;
+	private Server server;
 	private Thread serverThread;
 	private Retrofit retrofit;
 
@@ -37,7 +35,7 @@ public class BaseServerTest {
 
 		serverThread = new Thread(() -> {
 			try {
-				server = new BaseServer(LISTEN_ADDRESS, PORT, new TransportTypeHolder(1), handlerList)
+				server = new Server(LISTEN_ADDRESS, PORT, new TransportTypeHolder(1), handlerList)
 						.start();
 			} catch (Exception e) {
 				throw new RuntimeException(e);

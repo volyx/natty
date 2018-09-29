@@ -19,19 +19,19 @@ import java.util.concurrent.CompletableFuture;
  * Base server abstraction. Class responsible for Netty EventLoops starting amd port listening.
  *
  */
-public class BaseServer {
+public class Server {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseServer.class);
+    private static final Logger log = LoggerFactory.getLogger(Server.class);
 
     private final String listenAddress;
     private final int port;
     private final TransportTypeHolder transportTypeHolder;
     private final ChannelInitializer<SocketChannel> channelInitializer;
-    private final CompletableFuture<BaseServer> startFuture = new CompletableFuture<>();
+    private final CompletableFuture<Server> startFuture = new CompletableFuture<>();
 
     private ChannelFuture cf;
 
-    public BaseServer(String listenAddress, int port, TransportTypeHolder transportTypeHolder, List<Object> restApi) {
+    public Server(String listenAddress, int port, TransportTypeHolder transportTypeHolder, List<Object> restApi) {
         this.listenAddress = listenAddress;
         this.port = port;
         this.transportTypeHolder = transportTypeHolder;
@@ -61,7 +61,7 @@ public class BaseServer {
         return channelInitializer;
     }
 
-    public BaseServer start() throws Exception {
+    public Server start() throws Exception {
         buildServerAndRun(
                 transportTypeHolder.bossGroup,
                 transportTypeHolder.workerGroup,

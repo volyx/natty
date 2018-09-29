@@ -16,7 +16,9 @@ public class ReflectionUtilTest {
 				{int.class, "1", Integer.class},
 				{Integer.class, "1", Integer.class},
 				{long.class, "1", Long.class},
+				{Long.class, "1", Long.class},
 				{boolean.class, "true", Boolean.class},
+				{Boolean.class, "true", Boolean.class},
 		};
 
 		for (Object[] testClazz : classes) {

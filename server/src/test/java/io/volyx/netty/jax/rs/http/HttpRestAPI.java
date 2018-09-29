@@ -4,7 +4,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -60,7 +59,7 @@ public class HttpRestAPI {
         handlerList.add(new HttpRestAPI());
         handlerList.add(new OkRestApi());
         try {
-            BaseServer server = new BaseServer("127.0.0.1", 9191, new TransportTypeHolder(1), handlerList)
+            Server server = new Server("127.0.0.1", 9191, new TransportTypeHolder(1), handlerList)
                 .start();
         } catch (Exception e) {
            throw new RuntimeException(e);
