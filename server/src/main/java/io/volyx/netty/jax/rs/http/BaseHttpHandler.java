@@ -21,7 +21,7 @@ import static io.volyx.netty.jax.rs.http.Response.serverError;
 public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(BaseHttpHandler.class);
-    protected final HandlerWrapper[] handlers;
+    private final HandlerWrapper[] handlers;
 
 
     public BaseHttpHandler(Object restApi) {
@@ -29,7 +29,7 @@ public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof HttpRequest) {
             HttpRequest req = (HttpRequest) msg;
 
@@ -62,13 +62,12 @@ public class BaseHttpHandler extends ChannelInboundHandlerAdapter {
         log.debug("{} : {}", req.method().name(), req.uri());
         try (URIDecoder uriDecoder = new URIDecoder(req, extractedParams)) {
             Object[] params = handler.fetchParams(ctx, uriDecoder);
-            finishHttp(ctx, uriDecoder, handler, params);
+            finishHttp(ctx, handler, params);
         }
     }
 
-    public void finishHttp(ChannelHandlerContext ctx, URIDecoder uriDecoder,
-                           HandlerWrapper handler, Object[] params) {
-        FullHttpResponse response = handler.invoke(params);
+    private void finishHttp(ChannelHandlerContext ctx, HandlerWrapper handler, Object[] params) {
+        Response response = handler.invoke(params);
         if (response != Response.NO_RESPONSE) {
             ctx.writeAndFlush(response);
         }

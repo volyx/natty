@@ -73,18 +73,18 @@ public class HandlerWrapper {
         return res;
     }
 
-    public FullHttpResponse invoke(Object[] params) {
+    public Response invoke(Object[] params) {
         try {
             mark();
-            return (FullHttpResponse) classMethod.invoke(handler, params);
+            return (Response) classMethod.invoke(handler, params);
         } catch (Exception e) {
             Throwable cause = e.getCause();
             if (cause == null) {
                 log.error("Error invoking handler. Reason : {}.", e.getMessage());
-                log.debug(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             } else {
                 log.error("Error invoking handler. Reason : {}.", cause.getMessage());
-                log.debug(cause.getMessage(), e);
+                log.error(cause.getMessage(), e);
             }
 
             return Response.serverError(e.getMessage());

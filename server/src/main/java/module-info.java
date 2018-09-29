@@ -1,4 +1,4 @@
-module netty.jax.rs {
+module io.volyx.netty.jax.rs.http {
 //	requires log4j.api;
 //	requires org.apache.logging.log4j.core;
 	requires slf4j.api;

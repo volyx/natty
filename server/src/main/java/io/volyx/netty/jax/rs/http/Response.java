@@ -1,12 +1,20 @@
 package io.volyx.netty.jax.rs.http;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.DefaultFileRegion;
+import io.netty.channel.FileRegion;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.ssl.SslHandler;
 
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +51,23 @@ public final class Response extends DefaultFullHttpResponse {
                  .set(CONTENT_LENGTH, 0);
     }
 
-    private void fillHeaders(String contentType) {
+	public Response(DefaultFileRegion defaultFileRegion, String contentType) {
+        super(HTTP_1_1, OK);
+        fillHeaders(contentType, defaultFileRegion.count());
+	}
+
+	private void fillHeaders(String contentType) {
         headers().set(CONNECTION, HttpHeaderValues.KEEP_ALIVE)
                  .set(CONTENT_TYPE, contentType)
                  .set(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
                  .set(CONTENT_LENGTH, content().readableBytes());
+    }
+
+    private void fillHeaders(String contentType, long contentLength) {
+        headers().set(CONNECTION, HttpHeaderValues.KEEP_ALIVE)
+                 .set(CONTENT_TYPE, contentType)
+                 .set(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                 .set(CONTENT_LENGTH, contentLength);
     }
 
     public static Response noResponse() {

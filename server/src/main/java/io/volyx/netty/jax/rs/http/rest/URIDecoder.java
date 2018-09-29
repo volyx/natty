@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import java.io.Closeable;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,14 +54,14 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 						throw new RuntimeException(e);
 					}
 
-					if (contentType.equals(MediaType.APPLICATION_FORM_URLENCODED)) {
-//					this.decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), httpRequest);
-						try {
-							decoder = new HttpPostRequestDecoder(factory, httpRequest);
-						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
-							throw new RuntimeException(e);
-						}
-					}
+//					if (contentType.equals(MediaType.APPLICATION_FORM_URLENCODED)) {
+////					this.decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), httpRequest);
+//						try {
+//							decoder = new HttpPostRequestDecoder(factory, httpRequest);
+//						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
+//							throw new RuntimeException(e);
+//						}
+//					}
 					if (decoder.isMultipart()) {
 
 						HttpContent chunk = (HttpContent) httpRequest;
@@ -138,25 +135,25 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 			// Check partial decoding for a FileUpload
 			InterfaceHttpData data = decoder.currentPartialHttpData();
 			if (data != null) {
-				StringBuilder builder = new StringBuilder();
-				if (partialContent == null) {
-					partialContent = (HttpData) data;
-					if (partialContent instanceof FileUpload) {
-						builder.append("Start FileUpload: ")
-								.append(((FileUpload) partialContent).getFilename()).append(" ");
-					} else {
-						builder.append("Start Attribute: ")
-								.append(partialContent.getName()).append(" ");
-					}
-					builder.append("(DefinedSize: ").append(partialContent.definedLength()).append(")");
-				}
-				if (partialContent.definedLength() > 0) {
-					builder.append(" ").append(partialContent.length() * 100 / partialContent.definedLength())
-							.append("% ");
-				} else {
-					builder.append(" ").append(partialContent.length()).append(" ");
-				}
-				logger.info(builder.toString());
+//				StringBuilder builder = new StringBuilder();
+//				if (partialContent == null) {
+//					partialContent = (HttpData) data;
+//					if (partialContent instanceof FileUpload) {
+//						builder.append("Start FileUpload: ")
+//								.append(((FileUpload) partialContent).getFilename()).append(" ");
+//					} else {
+//						builder.append("Start Attribute: ")
+//								.append(partialContent.getName()).append(" ");
+//					}
+//					builder.append("(DefinedSize: ").append(partialContent.definedLength()).append(")");
+//				}
+//				if (partialContent.definedLength() > 0) {
+//					builder.append(" ").append(partialContent.length() * 100 / partialContent.definedLength())
+//							.append("% ");
+//				} else {
+//					builder.append(" ").append(partialContent.length()).append(" ");
+//				}
+//				logger.info(builder.toString());
 			}
 		} catch (HttpPostRequestDecoder.EndOfDataDecoderException e1) {
 			// end
@@ -170,13 +167,13 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 			FileUpload fileUpload = (FileUpload) data;
 			if (fileUpload.isCompleted()) {
 
-				Path file = Paths.get("/Users/volyx/Projects/netty-jax-rs/src/test/resources/byByteChannel.png");
-
-				try {
-					fileUpload.renameTo(file.toFile());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				Path file = Paths.get("/Users/volyx/Projects/netty-jax-rs/server/src/test/resources/byByteChannel.png");
+//
+//				try {
+//					fileUpload.renameTo(file.toFile());
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 				decoder.removeHttpDataFromClean(fileUpload); //remove
 				// the File of to delete file
 			} else {

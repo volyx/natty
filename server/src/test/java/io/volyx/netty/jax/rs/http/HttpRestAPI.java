@@ -4,8 +4,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/test")
 public class HttpRestAPI {
@@ -20,6 +26,22 @@ public class HttpRestAPI {
     @Path("/test/{name}")
     public Response test(@PathParam("name") String name) {
         return Response.ok(JsonParser.toJson(new Test()),  "application/json");
+    }
+
+    @GET
+    @Path("/file")
+    public Response file() {
+        final URL url = this.getClass().getClassLoader().getResource("test.jpg");
+        Objects.requireNonNull(url);
+        File file = new File(url.getFile());
+        try {
+            final String probeContentType = Files.probeContentType(file.toPath());
+            System.out.println(probeContentType);
+            return Response.ok(Files.readAllBytes(file.toPath()), probeContentType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Response.notFound();
     }
 
     @POST

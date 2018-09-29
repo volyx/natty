@@ -1,13 +1,12 @@
 package io.volyx.netty.jax.rs.http;
 
+import io.netty.util.AsciiString;
 import okhttp3.*;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
@@ -16,7 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class BaseServerTest {
@@ -30,7 +32,7 @@ public class BaseServerTest {
 	@Before
 	public void before() {
 		List<Object> handlerList = new ArrayList<>();
-		handlerList.add(new HttpRestAPI());
+//		handlerList.add(new HttpRestAPI());
 		handlerList.add(new OkRestApi());
 
 		serverThread = new Thread(() -> {
@@ -51,11 +53,21 @@ public class BaseServerTest {
 			}
 		}
 
+
+
+
 		final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
 				.readTimeout(60, TimeUnit.SECONDS)
 				.connectTimeout(60, TimeUnit.SECONDS)
 				.build();
 
+
+//		final HttpClient httpClient = HttpClient.newBuilder()
+//				.connectTimeout(Duration.of(60, ChronoUnit.SECONDS))
+//				.build();
+
+
+//		httpClient.sendAsync(HttpRequest.newBuilder(URI.create("http://" + LISTEN_ADDRESS + ":" + PORT)).build()).get();
 
 		retrofit = new Retrofit.Builder()
 				.addConverterFactory(GsonConverterFactory.create())
@@ -69,7 +81,9 @@ public class BaseServerTest {
 		final OkService okService = retrofit.create(OkService.class);
 
 		try {
-			final String body = okService.ok().execute().body();
+			final Response<String> response = okService.ok().execute();
+			Assert.assertTrue("Error: " + response.code(), response.isSuccessful());
+			final String body = response.body();
 			Assert.assertNotNull(body);
 			Assert.assertEquals("ok", body);
 		} catch (IOException e) {
@@ -132,9 +146,10 @@ public class BaseServerTest {
 		}
 	}
 
+//	@Ignore
 	@Test
 //			(timeout = 10_000L)
-	public void testFileUpload() throws URISyntaxException {
+	public void testFileUpload() {
 		final URL url = this.getClass().getClassLoader().getResource("test.jpg");
 		Objects.requireNonNull(url);
 		final OkService okService = retrofit.create(OkService.class);
@@ -147,6 +162,24 @@ public class BaseServerTest {
 			final String responseBody = okService.updateProfile(body).execute().body();
 			Assert.assertNotNull(responseBody);
 			Assert.assertEquals(file.getName(), responseBody);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+			(timeout = 10_000L)
+	public void testGetFile() {
+		final OkService okService = retrofit.create(OkService.class);
+
+		try {
+			final Response<ResponseBody> response = okService.getFile().execute();
+			Assert.assertTrue(response.isSuccessful());
+			Assert.assertNotNull(response);
+			final ResponseBody body = response.body();
+			Assert.assertNotNull(body);
+			Assert.assertNotNull(body.bytes());
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail(e.getMessage());
@@ -174,6 +207,9 @@ public class BaseServerTest {
 		@Multipart
 		@POST("file")
 		Call<String> updateProfile(@Part MultipartBody.Part image);
+
+		@GET("getfile")
+		Call<ResponseBody> getFile();
 
 	}
 
