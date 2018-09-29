@@ -1,6 +1,8 @@
 package io.volyx.netty.jax.rs.http;
 
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.multipart.FileUpload;
+import io.volyx.netty.jax.rs.http.rest.params.Context;
 
 import javax.ws.rs.*;
 import java.io.File;
@@ -46,10 +48,10 @@ public class OkRestApi {
 		return Response.ok(JsonParser.toJson(body));
 	}
 
-	@POST
-	@Path("model")
-	public Response bodyModel(Model body) {
-		return Response.ok(JsonParser.toJson(body));
+	@GET
+	@Path("context")
+	public Response context(@Context ChannelHandlerContext context) {
+		return Response.ok(JsonParser.toJson(context != null));
 	}
 
 	@POST

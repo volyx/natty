@@ -186,6 +186,24 @@ public class BaseServerTest {
 		}
 	}
 
+	@Test
+			(timeout = 10_000L)
+	public void testContext() {
+		final OkService okService = retrofit.create(OkService.class);
+
+		try {
+			final Response<Boolean> response = okService.getContext().execute();
+			Assert.assertTrue(response.isSuccessful());
+			Assert.assertNotNull(response);
+			final Boolean body = response.body();
+			Assert.assertNotNull(body);
+			Assert.assertTrue(body);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail(e.getMessage());
+		}
+	}
+
 	public static interface OkService {
 
 		@GET("/ok")
@@ -210,6 +228,9 @@ public class BaseServerTest {
 
 		@GET("getfile")
 		Call<ResponseBody> getFile();
+
+		@GET("context")
+		Call<Boolean> getContext();
 
 	}
 
