@@ -40,4 +40,11 @@ public class TestAnnotationsUtil {
 		Assert.assertEquals("surname", surnameParam.getName());
 		Assert.assertEquals(surnameParam.getType(), surnameParam.getType());
 	}
+
+	@Test
+	public void testStatic() {
+		final HandlerWrapper[] register = AnnotationsUtil.register(new StaticFileHandlerTest());
+		Assert.assertNotNull(register);
+		Assert.assertEquals(1, register.length);
+	}
 }
