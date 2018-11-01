@@ -1,4 +1,4 @@
-module io.volyx.netty.jax.rs.http {
+module io.natty {
 //	requires log4j.api;
 //	requires org.apache.logging.log4j.core;
 	requires slf4j.api;
@@ -7,5 +7,5 @@ module io.volyx.netty.jax.rs.http {
 	requires gson;
 	requires io.netty.all;
 
-	exports io.volyx.netty.jax.rs.http;
+	exports io.natty;
 }
