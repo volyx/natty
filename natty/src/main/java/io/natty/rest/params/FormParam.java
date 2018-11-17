@@ -54,14 +54,7 @@ public class FormParam extends Param {
                     FileUpload fileUpload = (FileUpload) data;
                     if (fileUpload.isCompleted()) {
                         return fileUpload;
-//                        try {
-//
-//                        } finally {
-//                            uriDecoder.removeHttpDataFromClean(fileUpload); //remove
-//                        }
-                        // the File of to delete file
                     } else {
-//					responseContent.append("\tFile to be continued but should not!\r\n");
                     }
                 }
             }

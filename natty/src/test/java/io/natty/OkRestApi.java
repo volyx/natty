@@ -1,5 +1,6 @@
 package io.natty;
 
+import io.natty.rest.params.MultipleFiles;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.multipart.FileUpload;
 import io.natty.rest.params.Context;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -80,6 +82,15 @@ public class OkRestApi {
 		return Response.ok(JsonParser.toJson(filePath.getFileName().toString()));
 	}
 
+	@POST
+	@Path("files")
+	public Response uploadFiles(@MultipleFiles List<FileUpload> files) {
+
+
+
+		return Response.ok(JsonParser.toJson(files.size()));
+	}
+
 
 	@GET
 	@Path("getfile")
@@ -88,8 +99,6 @@ public class OkRestApi {
 		Objects.requireNonNull(url);
 		File file = new File(url.getFile());
 		java.nio.file.Path path = file.toPath();
-//		java.nio.file.Path path = Paths.get("/Users/volyx/Projects/netty-jax-rs/server/src/test/resources/test.jpg");
-
 		try {
 			return Response.ok(Files.readAllBytes(path), Files.probeContentType(path));
 		} catch (IOException e) {

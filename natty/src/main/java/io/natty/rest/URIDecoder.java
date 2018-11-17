@@ -135,29 +135,8 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 			// Check partial decoding for a FileUpload
 			InterfaceHttpData data = decoder.currentPartialHttpData();
 			if (data != null) {
-//				StringBuilder builder = new StringBuilder();
-//				if (partialContent == null) {
-//					partialContent = (HttpData) data;
-//					if (partialContent instanceof FileUpload) {
-//						builder.append("Start FileUpload: ")
-//								.append(((FileUpload) partialContent).getFilename()).append(" ");
-//					} else {
-//						builder.append("Start Attribute: ")
-//								.append(partialContent.getName()).append(" ");
-//					}
-//					builder.append("(DefinedSize: ").append(partialContent.definedLength()).append(")");
-//				}
-//				if (partialContent.definedLength() > 0) {
-//					builder.append(" ").append(partialContent.length() * 100 / partialContent.definedLength())
-//							.append("% ");
-//				} else {
-//					builder.append(" ").append(partialContent.length()).append(" ");
-//				}
-//				logger.info(builder.toString());
 			}
 		} catch (HttpPostRequestDecoder.EndOfDataDecoderException e1) {
-			// end
-//			responseContent.append("\r\n\r\nEND OF CONTENT CHUNK BY CHUNK\r\n\r\n");
 		}
 	}
 
@@ -167,17 +146,8 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 			FileUpload fileUpload = (FileUpload) data;
 			if (fileUpload.isCompleted()) {
 
-//				Path file = Paths.get("/Users/volyx/Projects/netty-jax-rs/server/src/test/resources/byByteChannel.png");
-//
-//				try {
-//					fileUpload.renameTo(file.toFile());
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
 				decoder.removeHttpDataFromClean(fileUpload); //remove
-				// the File of to delete file
 			} else {
-//					responseContent.append("\tFile to be continued but should not!\r\n");
 			}
 		}
 	}

@@ -15,6 +15,8 @@ import java.util.Objects;
 @Path("/test")
 public class HttpRestAPI {
 
+    private URL url = this.getClass().getClassLoader().getResource("test.jpg");
+
     @GET
     @Path("/hello/{name}")
     public Response getDashboard(@PathParam("name") String name) {
@@ -30,12 +32,11 @@ public class HttpRestAPI {
     @GET
     @Path("/file")
     public Response file() {
-        final URL url = this.getClass().getClassLoader().getResource("test.jpg");
+
         Objects.requireNonNull(url);
         File file = new File(url.getFile());
         try {
             final String probeContentType = Files.probeContentType(file.toPath());
-            System.out.println(probeContentType);
             return Response.ok(Files.readAllBytes(file.toPath()), probeContentType);
         } catch (IOException e) {
             e.printStackTrace();

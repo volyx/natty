@@ -144,9 +144,7 @@ public class ServerTest {
 		}
 	}
 
-//	@Ignore
 	@Test
-//			(timeout = 10_000L)
 	public void testFileUpload() {
 		final URL url = this.getClass().getClassLoader().getResource("test.jpg");
 		Objects.requireNonNull(url);
@@ -160,6 +158,29 @@ public class ServerTest {
 			final String responseBody = okService.updateProfile(body).execute().body();
 			Assert.assertNotNull(responseBody);
 			Assert.assertEquals(file.getName(), responseBody);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testFilesUpload() {
+		final URL url = this.getClass().getClassLoader().getResource("test.jpg");
+		Objects.requireNonNull(url);
+		final OkService okService = retrofit.create(OkService.class);
+		File file = new File(url.getFile());
+		RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+		List<MultipartBody.Part> parts = new ArrayList<>();
+		final MultipartBody.Part formData = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+		parts.add(formData);
+		parts.add(MultipartBody.Part.createFormData("file1", file.getName(), requestFile));
+
+		try {
+			final String responseBody = okService.uploadFiles(parts).execute().body();
+			Assert.assertNotNull(responseBody);
+			Assert.assertEquals(Integer.toString(parts.size()), responseBody);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail(e.getMessage());
@@ -223,6 +244,10 @@ public class ServerTest {
 		@Multipart
 		@POST("file")
 		Call<String> updateProfile(@Part MultipartBody.Part image);
+
+		@Multipart
+		@POST("files")
+		Call<String> uploadFiles(@Part List<MultipartBody.Part> images);
 
 		@GET("getfile")
 		Call<ResponseBody> getFile();
