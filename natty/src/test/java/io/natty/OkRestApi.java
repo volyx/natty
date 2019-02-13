@@ -56,7 +56,7 @@ public class OkRestApi {
 	@POST
 	@Path("file")
 	public Response uploadFile(@FormParam("file") FileUpload fileUpload) {
-		java.nio.file.Path dir = null;
+		java.nio.file.Path dir;
 		try {
 			dir = Files.createTempDirectory(System.currentTimeMillis() + "");
 		} catch (IOException e) {
@@ -85,9 +85,6 @@ public class OkRestApi {
 	@POST
 	@Path("files")
 	public Response uploadFiles(@MultipleFiles List<FileUpload> files) {
-
-
-
 		return Response.ok(JsonParser.toJson(files.size()));
 	}
 
@@ -102,7 +99,7 @@ public class OkRestApi {
 		try {
 			return Response.ok(Files.readAllBytes(path), Files.probeContentType(path));
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println(e.getMessage());
 			return Response.serverError(e.getMessage());
 		}
 	}

@@ -1,4 +1,4 @@
-## Netty JAX-RS implementation. 
+## Natty - netty JAX-RS implementation. 
 
 Implementation supports subset of [JAX_RS](https://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services) specification annotations.
 
