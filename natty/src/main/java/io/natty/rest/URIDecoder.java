@@ -48,11 +48,11 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 
 
 				if (contentType != null) {
-					try {
+//					try {
 						decoder = new HttpPostRequestDecoder(factory, httpRequest);
-					} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
-						throw new RuntimeException(e);
-					}
+//					} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
+//						throw new RuntimeException(e);
+//					}
 
 //					if (contentType.equals(MediaType.APPLICATION_FORM_URLENCODED)) {
 ////					this.decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), httpRequest);
@@ -65,11 +65,12 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 					if (decoder.isMultipart()) {
 
 						HttpContent chunk = (HttpContent) httpRequest;
-						try {
-							decoder.offer(chunk);
-						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
-							throw new RuntimeException(e);
-						}
+//						try {
+//							decoder.offer(chunk);
+//						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
+//							throw new RuntimeException(e);
+//						}
+//						decoder.offer(chunk);
 						readHttpDataChunkByChunk();
 						if (chunk instanceof LastHttpContent) {
 //						reset();
@@ -79,11 +80,11 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 						this.bodyData = ((HttpContent) httpRequest).content();
 					}
 					if (contentType != null && contentType.equals(MediaType.APPLICATION_JSON)) {
-						try {
+//						try {
 							decoder = new HttpPostRequestDecoder(factory, httpRequest);
-						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
-							throw new RuntimeException(e);
-						}
+//						} catch (HttpPostRequestDecoder.ErrorDataDecoderException e) {
+//							throw new RuntimeException(e);
+//						}
 
 						this.bodyData = ((HttpContent) httpRequest).content();
 
@@ -115,7 +116,7 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 	 * Example of reading request by chunk and getting values from chunk to chunk
 	 */
 	private void readHttpDataChunkByChunk() {
-		try {
+//		try {
 			while (decoder.hasNext()) {
 				InterfaceHttpData data = decoder.next();
 				if (data != null) {
@@ -136,8 +137,8 @@ public class URIDecoder extends QueryStringDecoder implements Closeable {
 			InterfaceHttpData data = decoder.currentPartialHttpData();
 			if (data != null) {
 			}
-		} catch (HttpPostRequestDecoder.EndOfDataDecoderException e1) {
-		}
+//		} catch (HttpPostRequestDecoder.EndOfDataDecoderException e1) {
+//		}
 	}
 
 
